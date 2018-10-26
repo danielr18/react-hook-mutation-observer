@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Example</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <br>
+    <a id="to-observe" href="#">Empty Link</a>
+    <br>
+    <button onclick="changelink()">Change Link</button>
+    <script>
+      function changelink() {
+        var link = document.getElementById('to-observe');
+        link.innerHTML = 'Random site';
+        link.href = `http://www.${Math.random()}.com`;
+      }
+    </script>
+    <script src="./example.js"></script>
+  </body>
+</html>
