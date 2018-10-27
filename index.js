@@ -1,47 +1,39 @@
 "use strict";
 let { useState, useEffect, useMemo } = require("react");
 
-function useMutationObserver(targetNode, config, callback) {
+const defaultCallback = mutationList => mutationList;
+
+function useMutationObserver(targetNode, config, callback = defaultCallback) {
   const [value, setValue] = useState(undefined);
-  const [isObserving, setObserving] = useState(true);
-
-  function createObserver(callback) {
-    return new MutationObserver((mutationList, observer) => {
-      const result = callback(mutationList, observer);
-      setValue(result);
-    });
-  }
-
-  const observer = useMemo(() => createObserver(callback), [callback]);
-  useEffect(() => {
-    if (isObserving) {
-      observer.observe(targetNode, config);
-      return () => {
-        observer.disconnect();
-      };
-    }
-  });
-
-  return {
-    value,
-    isObserving,
-    observe: () => {
-      setObserving(true);
+  const observer = useMemo(
+    () =>
+      new MutationObserver((mutationList, observer) => {
+        const result = callback(mutationList, observer);
+        setValue(result);
+      }),
+    [callback]
+  );
+  useEffect(
+    () => {
+      if (targetNode) {
+        observer.observe(targetNode, config);
+        return () => {
+          observer.disconnect();
+        };
+      }
     },
-    disconnect: () => {
-      setObserving(false);
-    }
-  };
+    [targetNode, config]
+  );
+
+  return value;
 }
 
 function useMutationObserverOnce(targetNode, config, callback) {
-  const { value, isObserving, disconnect } = useMutationObserver(
-    targetNode,
-    config,
-    callback
-  );
+  const [isObserving, setObserving] = useState(true);
+  const node = isObserving ? targetNode : null;
+  const value = useMutationObserver(node, config, callback);
   if (value !== undefined && isObserving) {
-    disconnect();
+    setObserving(false);
   }
   return value;
 }

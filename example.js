@@ -2,6 +2,8 @@ import React from "react";
 import { render } from "react-dom";
 import { useMutationObserverOnce, useMutationObserver } from "./";
 
+const config = { attributes: true };
+
 function handleMutations(mutations) {
   if (!mutations) return;
   for (const { target } of mutations) {
@@ -12,14 +14,14 @@ function handleMutations(mutations) {
 }
 
 function App() {
-  let { value: currentLink } = useMutationObserver(
+  let currentLink = useMutationObserver(
     document.getElementById("to-observe"),
-    { attributes: true },
+    config,
     handleMutations
   );
   let firstLink = useMutationObserverOnce(
     document.getElementById("to-observe"),
-    { attributes: true },
+    config,
     handleMutations
   );
   return (

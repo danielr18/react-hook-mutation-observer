@@ -34,13 +34,13 @@ function handleMutations(mutations) {
 }
 
 function MyComponent() {
-  let { value: currentValue } = useMutationObserver(
+  const currentValue = useMutationObserver(
     document.getElementById("to-observe"),
     { attributes: true },
     handleMutations
   );
 
-  let firstValue = useMutationObserverOnce(
+  const firstValue = useMutationObserverOnce(
     document.getElementById("to-observe"),
     { attributes: true },
     handleMutations
